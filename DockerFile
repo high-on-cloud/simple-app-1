@@ -1,0 +1,5 @@
+FROM UBUNTU
+MAINTAINER SRINIVAS KARRE
+WORKDIR /app
+COPY target/simple-app.jar app.jar
+CMD exec java -jar app.jar
