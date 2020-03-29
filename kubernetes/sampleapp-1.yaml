@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: app1-dep
+ namespace: app-space
+spec:
+ replicas: 3
+ selector:
+  matchLabels:
+   name: simple-app-1
+   tier: backend
+ template:
+  metadata:
+   name: simple-app-1
+   labels:
+    name: simple-app-1
+    tier: backend
+  spec:
+   containers:
+    - name: simple-app
+      image: srinivaskarre/simpleapp
+      ports:
+       - containerPort: 8081
+      env:
+       - name: SAMPLE_APP_PORT
+         value: "80"
+       - name: SAMPLE_APP_SERVICE
+         value: "simple-app-2"
+       - name: SERVER_PORT
+         value: "8081"
+       - name: IS_END_SERVICE
+         value: "false"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+ name: simple-app-1-svc
+ namespace: app-space
+spec: 
+ type: LoadBalancer
+ selector:
+  name: simple-app-1
+  tier: backend
+ ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8081
+ 
